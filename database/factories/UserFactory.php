@@ -30,7 +30,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'role_id' => Role::query()->where('name', Role::USER)->value('id'),
+            'role_id' => Role::query()->firstOrCreate(['name' => Role::USER])->id,
         ];
     }
 
@@ -50,7 +50,7 @@ class UserFactory extends Factory
     public function admin(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role_id' => Role::query()->where('name', Role::ADMIN)->value('id'),
+            'role_id' => Role::query()->firstOrCreate(['name' => Role::ADMIN])->id,
         ]);
     }
 }

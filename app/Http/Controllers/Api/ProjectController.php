@@ -33,14 +33,16 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProjectRequest $request): ProjectResource
+    public function store(StoreProjectRequest $request): \Illuminate\Http\JsonResponse
     {
         $project = $request->user()->projects()->create([
             ...$request->validated(),
             'status' => $request->validated('status', Project::STATUS_ACTIVE),
         ]);
 
-        return new ProjectResource($project);
+        return (new ProjectResource($project))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
